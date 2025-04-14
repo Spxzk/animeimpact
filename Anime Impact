@@ -1,0 +1,76 @@
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+
+local Window = Fluent:CreateWindow({
+    Title = "Spxz Hub" .. Fluent.Version,
+    SubTitle = "spxz",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = true, 
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl
+})
+
+
+local Tabs = {
+    Main = Window:AddTab({ Title = "Main", Icon = "info" }),
+    Stars = Window:AddTab({ Title = "Stars", Icon = "star" }),
+    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
+}
+
+ local Options = Fluent.Options
+
+ local player = game.Players.LocalPlayer
+local eggsFolder = player:WaitForChild("PlayerGui"):WaitForChild("_popup"):WaitForChild("_eggs")
+
+-- Função para destruir qualquer novo filho adicionado
+local function onChildAdded(child)
+    child:Destroy()
+end
+
+-- Conectar o evento
+eggsFolder.ChildAdded:Connect(onChildAdded)
+
+-- Opcional: destruir qualquer filho que já exista ao iniciar o script
+for _, child in ipairs(eggsFolder:GetChildren()) do
+    child:Destroy()
+end
+
+ local Dropdown = Tabs.Stars:AddDropdown("Dropdown", {
+    Title = "Select Star",
+    Values = {"_slayer", "_hxh", "_sea", "_jjk"},
+    Multi = false,
+    Default = "_jjk"
+})
+
+ local function GetRemoteEvent()
+    for _, child in ipairs(game.ReplicatedStorage:GetChildren()) do
+        if child:IsA("Folder") and child.Name ~= "Remotes" then
+            for _, remote in ipairs(child:GetChildren()) do
+                if remote:IsA("RemoteEvent") then
+                    return remote
+                end
+            end
+        end
+    end
+    return nil
+end
+
+local remote = GetRemoteEvent()
+
+local ToggleSummon = Tabs.Stars:AddToggle("OpenToggle", {Title = "Auto Open Star", Default = false})
+
+ToggleSummon:OnChanged(function()
+    while ToggleSummon.Value do wait(0.1)
+        local args = {
+            [1] = "01010010 01100101 01110000 01101100 01101001 01100011 01100001 01110100 01100101 01100100 01010011 01110100 01101111 01110010 01100001 01100111 01100101 00101110 01010110 01101001 01101110 01101110 01111001 01000110 01110010 01100001 01101101 01100101 01110111 01101111 01110010 01101011 00101110 01001100 01101001 01100010 01110010 01100001 01110010 01111001 00101110 01000011 01101111 01101110 01101110 01100101 01100011 01110100 01101001 01101111 01101110 00101110 01110100 01101000 01110010 01100101 01100001 01100100 01011111 01110011 01100101 01100011 01110101 01110010 01101001 01110100 01111001 00111010 00110001 00001010 01010010 01100101 01110000 01101100 01101001 01100011 01100001 01110100 01100101 01100100 01010011 01110100 01101111 01110010 01100001 01100111 01100101 00101110 01010110 01101001 01101110 01101110 01111001 01000110 01110010 01100001 01101101 01100101 01110111 01101111 01110010 01101011 00101110 01001100 01101001 01100010 01110010 01100001 01110010 01111001 00101110 01000011 01101111 01101110 01101110 01100101 01100011 01110100 01101001 01101111 01101110 00111010 00110001 00110101 00110110 00100000 01100110 01110101 01101110 01100011 01110100 01101001 01101111 01101110 00100000 01110011 01100101 01101110 01100100 00001010 01010010 01100101 01110000 01101100 01101001 01100011 01100001 01110100 01100101 01100100 01010011 01110100 01101111 01110010 01100001 01100111 01100101 00101110 01010110 01101001 01101110 01101110 01111001 01000110 01110010 01100001 01101101 01100101 01110111 01101111 01110010 01101011 00101110 01001100 01101001 01100010 01110010 01100001 01110010 01111001 00101110 01000011 01101100 01101001 01100101 01101110 01110100 00101110 01010100 01100101 01101100 01100101 01110000 01101111 01110010 01110100 01010011 01100101 01110100 01110101 01110000 00111010 00110101 00110001 00001010",
+[2] = "System",
+[3] = "_game",
+[4] = "_open_egg",
+[5] = Dropdown.Value
+}
+
+remote:FireServer(unpack(args))
+    end        
+end)
