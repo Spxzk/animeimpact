@@ -39,9 +39,9 @@ end
 
  local Dropdown = Tabs.Stars:AddDropdown("Dropdown", {
     Title = "Select Star",
-    Values = {"_slayer", "_hxh", "_sea", "_jjk"},
+    Values = {"_slayer", "_hxh", "_sea", "_jjk, _easter"},
     Multi = false,
-    Default = "_jjk"
+    Default = ""
 })
 
  local function GetRemoteEvent()
